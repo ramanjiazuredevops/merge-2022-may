@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+  - name: Install Packages
+    yum: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - npm
+      - nodejs
+      - python3-pip
+      - gcc
+
+
+  - name: Install " configurable-http-proxy" package globally.
+    npm:
+      name: configurable-http-proxy
+      global: yes
+
+  # Install Jupyterhub
+  - pip:
+      name: jupyter
+
+  - name: create config file
+    command: /usr/local/bin/jupyterhub --generate-config
+    args:
+      chdir: /tmp
